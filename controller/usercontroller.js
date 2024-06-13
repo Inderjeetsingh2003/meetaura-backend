@@ -146,4 +146,25 @@ const googlelogin = async (req, res) => {
   }
 };
 
-module.exports = { googlelogin,logindirectly,signup };
+
+
+const getuserdetails=(async(req,res)=>
+{
+    try{
+
+        const user= await User.findById(req.user.id).select('-password')
+        if(!user)
+            {
+                return res.status(404).json({success:0,message:"user not found login/signupfirst"})
+    
+            }
+            return res.status(200).json({success:1,user})
+    }catch(error)
+    {
+        console.log(error.message)
+        return res.status(500).json({success:0,message:"internal server error"})
+    }
+
+
+})
+module.exports = { googlelogin,logindirectly,signup ,getuserdetails};
