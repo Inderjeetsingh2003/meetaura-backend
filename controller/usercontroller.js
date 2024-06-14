@@ -164,7 +164,58 @@ const getuserdetails=(async(req,res)=>
         console.log(error.message)
         return res.status(500).json({success:0,message:"internal server error"})
     }
-
-
 })
-module.exports = { googlelogin,logindirectly,signup ,getuserdetails};
+
+
+const updateuser=(async(req,res)=>
+{
+    try{
+        const{username,email}=req.body
+            let user=await User.findById(req.user.id).select('-password')
+            if(!user)
+                {
+                    return res.status(404).json({success:0,message:'user not found'})
+                }
+              if(username)
+                {   if(username!==user.username)
+                    {
+                        const preusername= await User.findOne({username})
+                        if(preusername)
+                            {
+                                return res.status(300).json({success:0,message:'username already exists'})
+                            }
+
+                            user.username=username
+                        }
+                        
+
+                    
+                    
+                }
+                if(email)
+                    {
+                        if(email!=user.email)
+                            {
+
+                                const preemailuser=await User.findOne({email})
+                                if(preemailuser)
+                                    {
+                                        return res.status(300).json({success:0,message:"email already exists"})
+                                    }
+                                    user.email=email
+                            }
+                    }
+
+                    await user.save()
+                    return res.status(200).json({success:1,message:'user updated successfully',user})
+
+    }
+    catch(error){
+        console.log(error.message)
+        return res.status(500).json({success:0,message:'internal server error'})
+    }
+})
+
+
+
+module.exports = { googlelogin,logindirectly,signup ,getuserdetails,updateuser};
