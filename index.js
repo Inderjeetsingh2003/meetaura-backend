@@ -33,8 +33,9 @@ io.on('connection',(socket)=>
     
     socket.on('sendmessage',(data)=>
     {
-        const{message,roomid}=data;
-        io.to(roomid).emit('message',message)
+        const{message,roomid,username}=data;
+        console.log("the socket sending mesage is:",username)
+        io.to(roomid).emit('message',{message,username})
 
     })
 
