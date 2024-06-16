@@ -28,7 +28,7 @@ io.on('connection',(socket)=>
     {
         const{roomid,username}=data
         socket.join(roomid)
-        socket.broadcast.to(roomid).emit('userconnected',`${username} has joined the ${roomid}`)
+        socket.broadcast.to(roomid).emit('userconnected',`${username} has joined the room`)
     })
     
     socket.on('sendmessage',(data)=>
