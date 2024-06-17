@@ -33,6 +33,10 @@ const roomschema=mongoose.Schema({
     admin:{
         type:mongoose.Schema.ObjectId,
         ref:'user'
+    },
+    joincode:{
+        type:String,
+    
     }
 })
 

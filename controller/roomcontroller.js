@@ -1,9 +1,9 @@
 
 const Room=require('../schema/Roomschema')
 
-const createroom=(async(req,res)=>
+const createroomchatroom=(async(req,res)=>
 {
-    const{title,description,accesstype,roomtype}=req.body
+    const{title,description,accesstype,roomtype,joincode}=req.body
     console.log(req.body)
 
     try{
@@ -13,9 +13,20 @@ const createroom=(async(req,res)=>
                 {
                     return res.status(400).json({success:0,message:"room with this title already exists"})
                 }
-                room=new Room({
-                    title,description,accesstype,roomtype,admin:req.user.id
-                })
+
+                let newroom={
+                    title,
+                    description, 
+                    accesstype,
+                    roomtype,
+                    admin:req.user.id,
+
+                }
+                if(joincode)
+                    {
+                        newroom.joincode=joincode
+                    }
+                room=new Room(newroom)
         
                 await room.save()
                 return res.status(200).json({success:1,message:"room created successfully"})
@@ -46,4 +57,7 @@ const getpublicroom=(async(req,res)=>
         return res.status(500).json({success:0,message:"internal server error"})
     }
 })
-module.exports={createroom,getpublicroom}
+
+
+
+module.exports={createroomchatroom,getpublicroom}
