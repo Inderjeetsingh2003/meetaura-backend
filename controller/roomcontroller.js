@@ -46,7 +46,7 @@ const getrooms=(async(req,res)=>
     try{
         const userid= new mongoose.Types.ObjectId(req.user.id)
        let privaterooms=await Room.find({accesstype:'private',$or:[{admin:userid},{members:userid}]}).populate('admin','username')
-       let PublicRooms= await Room.find({accesstype:'public'}).populate('admin','usrname')
+       let PublicRooms= await Room.find({accesstype:'public'}).populate('admin','username')
        let rooms= privaterooms.concat(PublicRooms)
         if(!rooms||rooms.length===0)
             {
