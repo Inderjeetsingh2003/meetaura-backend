@@ -6,7 +6,7 @@ const fetchadmin=(req,res,next)=>
     
 
         const token=req.header('access-token')
-        // console.log(token)
+       //  console.log(token)
         if(!token)
         {
             return res.status(401).send("invalid token")
