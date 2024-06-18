@@ -41,16 +41,19 @@ const createroomchatroom=(async(req,res)=>
 
 
 // get all public rooms
-const getpublicroom=(async(req,res)=>
+const getrooms=(async(req,res)=>
 {
     try{
-        const rooms= await Room.find({accesstype:"public"}).populate('admin','username')
-        if(!rooms)
+        const userid= new mongoose.Types.ObjectId(req.user.id)
+       let privaterooms=await Room.find({accesstype:'private',$or:[{admin:userid},{members:userid}]}).populate('admin','username')
+       let PublicRooms= await Room.find({accesstype:'public'}).populate('admin','usrname')
+       let rooms= privaterooms.concat(PublicRooms)
+        if(!rooms||rooms.length===0)
             {
-                return res.status(404).json({success:0,message:"no public room present"})
-
+                    return res.status(404).json({success:0,message:"no room to display"})
             }
-            return res.status(200).json({success:1,rooms});
+            return res.status(200).json({success:1,rooms})
+
 
     }catch(error)
     {
@@ -59,27 +62,8 @@ const getpublicroom=(async(req,res)=>
     }
 })
 
-const getprivatechatrooms=(async(req,res)=>
-{
-    console.log("the userid in privatechatroom is:",req.user.id)
-        try {
-
-            const userid= new mongoose.Types.ObjectId(req.user.id)
-            const rooms= await Room.find({accesstype:'private',
-                $or:[{admin:userid},{members:userid}]
-            }).populate('admin','username')
-            //console.log("the private chat room",rooms)
-            if(!rooms||rooms.length===0)
-                {
-                    return res.status(404).json({success:0,message:"you are not a member or admin of any private chat room"})
-                }
-                return res.status(200).json({success:1,rooms})
-
-        } catch (error) {
-            console.log(error.message)
-            return res.status(500).json({success:0,messsage:"internal server error"})
-        }
-})
 
 
-module.exports={createroomchatroom,getpublicroom,getprivatechatrooms}
+
+
+module.exports={createroomchatroom,getrooms}
